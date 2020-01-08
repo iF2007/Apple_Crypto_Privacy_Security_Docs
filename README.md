@@ -6,11 +6,6 @@ My curated list (not entire list) of Apple crypto/privacy/security related docum
 - Differential privacy
 - FaceID
 
-## Apple Platform Security Guide Version
-| Date            |    macOS    |  iOS   | watchOS |
-| ----            | ----------- | ------ |-------- |
-| Fall 2019       |  `10.15.2`  | `13.3` | `6.1.1` |
-
 
 Any pull request is welcome.
 
