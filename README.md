@@ -13,4 +13,5 @@ My curated list (not entire list) of Apple crypto/privacy/security related docum
 
 
 Any pull request is welcome.
+
 Credit to [0xmachos](https://github.com/0xmachos) for saving various history documents.
