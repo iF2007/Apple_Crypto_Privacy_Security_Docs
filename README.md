@@ -5,6 +5,7 @@ My curated list (not entire list) of Apple crypto/privacy/security related docum
 - macOS security guide
 - Differential privacy
 - FaceID
+- SideLoading
 
 
 Any pull request is welcome.
