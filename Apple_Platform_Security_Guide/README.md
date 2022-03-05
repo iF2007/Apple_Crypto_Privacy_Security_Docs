@@ -1,1 +1,1 @@
-https://support.apple.com/zh-cn/guide/security/welcome/web
+https://support.apple.com/en-ca/guide/security/welcome/web
