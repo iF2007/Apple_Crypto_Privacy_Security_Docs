@@ -1,4 +1,4 @@
-# Apple Crypto Privacy Security Docs
+# Apple Cryptography/Privacy/Security Documentations
 My curated list (not entire list) of Apple crypto/privacy/security related documents, including:
 - Apple platform security guide
 - Apple personal safety user guide
