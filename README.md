@@ -61,6 +61,13 @@ This repository exists to make important Apple security materials easier to **br
 - Some documents reflect a specific historical moment and may not match Apple's latest implementations, wording, or policies.
 - Most files are preserved as-is in PDF form for reference value.
 
+## © Copyright and ownership
+
+- Apple-originated documents, trademarks, and related materials remain the property of **Apple Inc.**
+- Source materials originally published by Apple belong to their respective owners and are included here for archival and reference purposes.
+- Some files in this repository are third-party technical assessments or analysis papers; rights for those works remain with their respective authors or publishers.
+- If you are a rights holder and would like a file reviewed or removed, please open an issue.
+
 ## 🤝 Contributions
 
 Pull requests are welcome for:
