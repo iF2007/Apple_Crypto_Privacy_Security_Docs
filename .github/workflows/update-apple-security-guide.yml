@@ -72,8 +72,8 @@ jobs:
           basename "$dest" > /tmp/newname.txt
           echo "$sha  $(basename "$dest")" >> "$CHECKSUMS"
 
-          # 3) Recompute the actual PDF count and latest year from the directory
-          pdf_count=$(find "$DIR" -maxdepth 1 -name '*.pdf' | wc -l | tr -d ' ')
+          # 3) Recompute the repo-wide PDF count and the latest guide year
+          pdf_count=$(find . -type f -name '*.pdf' | wc -l | tr -d ' ')
           latest_year=$(ls "$DIR"/*.pdf | sed -E 's#.*/##' | grep -oE '^[0-9]{4}' | sort -u | tail -1)
           echo "pdf_count=$pdf_count" >> "$GITHUB_OUTPUT"
           echo "latest_year=$latest_year" >> "$GITHUB_OUTPUT"

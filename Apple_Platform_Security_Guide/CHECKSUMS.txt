@@ -11,4 +11,3 @@ ebad4d87376363b6f5ed11e7f2e9bfed5960c2d6a8cc83c89a3e68c4cc8c0075  2024-May-apple
 b52f68820c1ea891c34bba5b9f54ded6f1160fc72561d75fdf5c230c64f83e67  2026-August-apple-platform-security-guide.pdf
 46702ba1467717fc21e86852e8bc9f8ff16f2ae4a110e62a3f9b0f3ec3c24582  2026-Jan-apple-platform-security-guide.pdf
 1f3d2814b562ef92af50af606389619eaed563938d7446efed6a06990d9f5cb6  2026-March-apple-platform-security-guide.pdf
-b52f68820c1ea891c34bba5b9f54ded6f1160fc72561d75fdf5c230c64f83e67  2026-August-apple-platform-security-guide-2.pdf
