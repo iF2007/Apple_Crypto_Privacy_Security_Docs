@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       force:
-        description: 'Force re-download even if the file already exists'
+        description: 'Force re-add even if the content is already tracked'
         required: false
         default: 'false'
         type: boolean
@@ -32,37 +32,33 @@ jobs:
         id: hash
         run: |
           echo "sha=$(sha256sum /tmp/apple-guide/current.pdf | awk '{print $1}')" >> "$GITHUB_OUTPUT"
-          echo "size=$(stat -c%s /tmp/apple-guide/current.pdf)" >> "$GITHUB_OUTPUT"
 
-      - name: Check for matching file in directory
-        id: find
+      - name: Check whether the sha256 already exists in CHECKSUMS.txt
+        id: check
         env:
           CURRENT_SHA: ${{ steps.hash.outputs.sha }}
         run: |
-          DIR="Apple_Platform_Security_Guide"
-          match=""
-          if [ -d "$DIR" ]; then
-            for f in "$DIR"/*.pdf; do
-              [ -e "$f" ] || continue
-              sha=$(sha256sum "$f" | awk '{print $1}')
-              if [ "$sha" = "$CURRENT_SHA" ]; then
-                match="$f"
-                break
-              fi
-            done
+          CHECKSUMS="Apple_Platform_Security_Guide/CHECKSUMS.txt"
+          if [ -f "$CHECKSUMS" ] && grep -q "$CURRENT_SHA" "$CHECKSUMS"; then
+            # Content already tracked -> nothing to add (unless forced)
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
           fi
-          echo "match=$match" >> "$GITHUB_OUTPUT"
 
-      - name: Determine filename and copy file into repo
-        if: steps.find.outputs.match == '' || inputs.force == 'true'
-        id: name
+      - name: Determine filename and stage new guide + checksum + README update
+        if: steps.check.outputs.found == 'false' || inputs.force == 'true'
+        id: stage
         run: |
+          set -euo pipefail
           DIR="Apple_Platform_Security_Guide"
+          CHECKSUMS="$DIR/CHECKSUMS.txt"
+          README="README.md"
           mkdir -p "$DIR"
+
+          # 1) Name the new file using the current year-month, matching existing convention
           date_str=$(date -u +%Y-%B)
-          # Normalize month to a capitalized form used by existing files (e.g. 2026-August)
           dest="${DIR}/${date_str}-apple-platform-security-guide.pdf"
-          # Avoid clobbering an existing file for the same month; append a suffix if needed
           if [ -e "$dest" ]; then
             base="${dest%.pdf}"
             n=2
@@ -70,19 +66,50 @@ jobs:
             dest="${base}-${n}.pdf"
           fi
           cp /tmp/apple-guide/current.pdf "$dest"
+
+          # 2) Append the new checksum entry
+          sha=$(sha256sum /tmp/apple-guide/current.pdf | awk '{print $1}')
+          basename "$dest" > /tmp/newname.txt
+          echo "$sha  $(basename "$dest")" >> "$CHECKSUMS"
+
+          # 3) Recompute the actual PDF count and latest year from the directory
+          pdf_count=$(find "$DIR" -maxdepth 1 -name '*.pdf' | wc -l | tr -d ' ')
+          latest_year=$(ls "$DIR"/*.pdf | sed -E 's#.*/##' | grep -oE '^[0-9]{4}' | sort -u | tail -1)
+          echo "pdf_count=$pdf_count" >> "$GITHUB_OUTPUT"
+          echo "latest_year=$latest_year" >> "$GITHUB_OUTPUT"
           echo "dest=$dest" >> "$GITHUB_OUTPUT"
 
-      - name: Commit and push new guide
-        if: steps.find.outputs.match == '' || inputs.force == 'true'
+      - name: Update root README counts and year range
+        if: steps.check.outputs.found == 'false' || inputs.force == 'true'
+        id: readme
         env:
-          DEST: ${{ steps.name.outputs.dest }}
+          PDF_COUNT: ${{ steps.stage.outputs.pdf_count }}
+          LATEST_YEAR: ${{ steps.stage.outputs.latest_year }}
+        run: |
+          set -euo pipefail
+          README="README.md"
+
+          # Update "**N PDF documents** currently tracked"
+          sed -i -E "s/- \*\*[0-9]+ PDF documents\*\* currently tracked/- **${PDF_COUNT} PDF documents** currently tracked/" "$README"
+
+          # Update the year range "from **YYYY–YYYY**" in the Collections table
+          sed -i -E "s/editions from \*\*[0-9]{4}–[0-9]{4}\*\*/editions from **2019–${LATEST_YEAR}**/" "$README"
+
+          echo "updated=true" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push changes
+        if: steps.check.outputs.found == 'false' || inputs.force == 'true'
+        env:
+          DEST: ${{ steps.stage.outputs.dest }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add "$DEST"
+          git add "Apple_Platform_Security_Guide/CHECKSUMS.txt"
+          git add "README.md"
           if git diff --cached --quiet; then
-            echo "No changes to commit (file already tracked)."
+            echo "No changes to commit."
             exit 0
           fi
-          git commit -m "docs(apple-platform-security): add $DEST"
+          git commit -m "docs(apple-platform-security): add ${DEST}"
           git push origin HEAD:master

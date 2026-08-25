@@ -1,0 +1,13 @@
+# Apple Platform Security Guide checksums
+# sha256sum  filename
+44d37673cb0abfbbdd879a5cdf974e48fbb9232553e2f3617bb271ff278c7e4a  2019-fall-apple-platform-security-guide.pdf
+7832e9fef32dfd0ea5bad644a12b3f195088c8257f315e145850d7cb65109b4d  2020-spring-apple-platform-security-guide.pdf
+0fca180b93a847e100d9d4c726453a7c010de193c7fc61c627813f97104fba3c  2021-Feb-apple-platform-security-guide.pdf
+cf84899c5ead4b4b78e570a98f6a7d18f9644582c581810ff25f586a4ca80ce5  2021-May-apple-platform-security-guide-CN.pdf
+19265062bd84d90868eb6752f3c809c6649592bf27a19ee042be5959276d92b9  2021-May-apple-platform-security-guide.pdf
+878f2df706bcf7fea71f421318c1c99a5d1df42f8871141c27720ddd633ad546  2022-May-apple-platform-security-guide.pdf
+828d7658cbb6ebddd0ef89d450344aae927c473de9b3e4ec8dd3ac1beed6bcd8  2024-Dec-apple-platform-security-guide.pdf
+ebad4d87376363b6f5ed11e7f2e9bfed5960c2d6a8cc83c89a3e68c4cc8c0075  2024-May-apple-platform-security-guide.pdf
+b52f68820c1ea891c34bba5b9f54ded6f1160fc72561d75fdf5c230c64f83e67  2026-August-apple-platform-security-guide.pdf
+46702ba1467717fc21e86852e8bc9f8ff16f2ae4a110e62a3f9b0f3ec3c24582  2026-Jan-apple-platform-security-guide.pdf
+1f3d2814b562ef92af50af606389619eaed563938d7446efed6a06990d9f5cb6  2026-March-apple-platform-security-guide.pdf
