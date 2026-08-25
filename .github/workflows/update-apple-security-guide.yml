@@ -47,7 +47,7 @@ jobs:
           fi
 
       - name: Determine filename and stage new guide + checksum + README update
-        if: steps.check.outputs.found == 'false' || inputs.force == 'true'
+        if: steps.check.outputs.found == 'false' || inputs.force
         id: stage
         run: |
           set -euo pipefail
@@ -80,7 +80,7 @@ jobs:
           echo "dest=$dest" >> "$GITHUB_OUTPUT"
 
       - name: Update root README counts and year range
-        if: steps.check.outputs.found == 'false' || inputs.force == 'true'
+        if: steps.check.outputs.found == 'false' || inputs.force
         id: readme
         env:
           PDF_COUNT: ${{ steps.stage.outputs.pdf_count }}
@@ -98,7 +98,7 @@ jobs:
           echo "updated=true" >> "$GITHUB_OUTPUT"
 
       - name: Commit and push changes
-        if: steps.check.outputs.found == 'false' || inputs.force == 'true'
+        if: steps.check.outputs.found == 'false' || inputs.force
         env:
           DEST: ${{ steps.stage.outputs.dest }}
         run: |
