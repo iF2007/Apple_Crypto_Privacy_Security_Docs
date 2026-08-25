@@ -1,1 +1,2 @@
-https://support.apple.com/guide/security/welcome/web
+- https://support.apple.com/guide/security/welcome/web
+- https://help.apple.com/pdf/security/en_US/apple-platform-security-guide.pdf
