@@ -2,8 +2,8 @@ name: Daily Sync Apple Platform Security Guide
 
 on:
   schedule:
-    # Run daily at 00:00 UTC
-    - cron: '0 0 * * *'
+    # Run daily at 09:41 UTC (iPhone launch homage, off the hour)
+    - cron: '41 9 * * *'
   workflow_dispatch:
     inputs:
       force:
