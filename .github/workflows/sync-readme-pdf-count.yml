@@ -1,0 +1,39 @@
+name: Sync README PDF Count
+
+on:
+  push:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-count:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Count PDF files across the repository
+        id: count
+        run: |
+          echo "pdf_count=$(find . -type f -name '*.pdf' | wc -l | tr -d ' ')" >> "$GITHUB_OUTPUT"
+
+      - name: Update "At a glance" PDF count in root README
+        env:
+          PDF_COUNT: ${{ steps.count.outputs.pdf_count }}
+        run: |
+          set -euo pipefail
+          README="README.md"
+          sed -i -E "s/- \*\*[0-9]+ PDF documents\*\* currently tracked/- **${PDF_COUNT} PDF documents** currently tracked/" "$README"
+
+      - name: Commit and push if the count changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "README.md"
+          if git diff --cached --quiet; then
+            echo "PDF count already up to date; nothing to commit."
+            exit 0
+          fi
+          git commit -m "docs: sync PDF document count in README"
+          git push origin HEAD:master
