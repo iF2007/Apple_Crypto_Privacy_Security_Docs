@@ -1,0 +1,88 @@
+name: Update Apple Platform Security Guide
+
+on:
+  schedule:
+    # Run weekly on Monday 00:00 UTC
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force re-download even if the file already exists'
+        required: false
+        default: 'false'
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  check-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download current Apple Platform Security Guide
+        run: |
+          mkdir -p /tmp/apple-guide
+          curl -fsSL -o /tmp/apple-guide/current.pdf \
+            'https://help.apple.com/pdf/security/en_US/apple-platform-security-guide.pdf'
+
+      - name: Compute sha256 of downloaded PDF
+        id: hash
+        run: |
+          echo "sha=$(sha256sum /tmp/apple-guide/current.pdf | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+          echo "size=$(stat -c%s /tmp/apple-guide/current.pdf)" >> "$GITHUB_OUTPUT"
+
+      - name: Check for matching file in directory
+        id: find
+        env:
+          CURRENT_SHA: ${{ steps.hash.outputs.sha }}
+        run: |
+          DIR="Apple_Platform_Security_Guide"
+          match=""
+          if [ -d "$DIR" ]; then
+            for f in "$DIR"/*.pdf; do
+              [ -e "$f" ] || continue
+              sha=$(sha256sum "$f" | awk '{print $1}')
+              if [ "$sha" = "$CURRENT_SHA" ]; then
+                match="$f"
+                break
+              fi
+            done
+          fi
+          echo "match=$match" >> "$GITHUB_OUTPUT"
+
+      - name: Determine filename and copy file into repo
+        if: steps.find.outputs.match == '' || inputs.force == 'true'
+        id: name
+        run: |
+          DIR="Apple_Platform_Security_Guide"
+          mkdir -p "$DIR"
+          date_str=$(date -u +%Y-%B)
+          # Normalize month to a capitalized form used by existing files (e.g. 2026-August)
+          dest="${DIR}/${date_str}-apple-platform-security-guide.pdf"
+          # Avoid clobbering an existing file for the same month; append a suffix if needed
+          if [ -e "$dest" ]; then
+            base="${dest%.pdf}"
+            n=2
+            while [ -e "${base}-${n}.pdf" ]; do n=$((n+1)); done
+            dest="${base}-${n}.pdf"
+          fi
+          cp /tmp/apple-guide/current.pdf "$dest"
+          echo "dest=$dest" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push new guide
+        if: steps.find.outputs.match == '' || inputs.force == 'true'
+        env:
+          DEST: ${{ steps.name.outputs.dest }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$DEST"
+          if git diff --cached --quiet; then
+            echo "No changes to commit (file already tracked)."
+            exit 0
+          fi
+          git commit -m "docs(apple-platform-security): add $DEST"
+          git push origin HEAD:master
