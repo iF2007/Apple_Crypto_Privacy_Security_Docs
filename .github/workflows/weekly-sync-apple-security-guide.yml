@@ -1,4 +1,4 @@
-name: Update Apple Platform Security Guide
+name: Weekly Sync Apple Platform Security Guide
 
 on:
   schedule:
