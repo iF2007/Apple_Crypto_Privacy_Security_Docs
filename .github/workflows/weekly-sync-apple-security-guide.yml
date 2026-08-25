@@ -2,8 +2,8 @@ name: Weekly Sync Apple Platform Security Guide
 
 on:
   schedule:
-    # Run weekly on Monday 00:00 UTC
-    - cron: '0 0 * * 1'
+    # Run daily at 00:00 UTC
+    - cron: '0 0 * * *'
   workflow_dispatch:
     inputs:
       force:
