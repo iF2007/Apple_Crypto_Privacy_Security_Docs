@@ -24,14 +24,23 @@ jobs:
 
       - name: Download current Apple Platform Security Guide
         run: |
-          mkdir -p /tmp/apple-guide
-          curl -fsSL -o /tmp/apple-guide/current.pdf \
-            'https://help.apple.com/pdf/security/en_US/apple-platform-security-guide.pdf'
+          URL="https://help.apple.com/pdf/security/en_US/apple-platform-security-guide.pdf"
+          TARGET_DIR="/tmp/apple-guide"
+          TARGET_FILE="$TARGET_DIR/current.pdf"
+          mkdir -p "$TARGET_DIR"
+          curl -fsSL -o "$TARGET_FILE" "$URL"
+          echo "URL=$URL"
+          echo "TARGET_DIR=$TARGET_DIR"
+          echo "TARGET_FILE=$TARGET_FILE"
 
       - name: Compute sha256 of downloaded PDF
         id: hash
         run: |
-          echo "sha=$(sha256sum /tmp/apple-guide/current.pdf | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+          TARGET_FILE="/tmp/apple-guide/current.pdf"
+          sha=$(sha256sum "$TARGET_FILE" | awk '{print $1}')
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "TARGET_FILE=$TARGET_FILE"
+          echo "sha=$sha"
 
       - name: Check whether the sha256 already exists in CHECKSUMS.txt
         id: check
@@ -41,10 +50,14 @@ jobs:
           CHECKSUMS="Apple_Platform_Security_Guide/CHECKSUMS.txt"
           if [ -f "$CHECKSUMS" ] && grep -q "$CURRENT_SHA" "$CHECKSUMS"; then
             # Content already tracked -> nothing to add (unless forced)
-            echo "found=true" >> "$GITHUB_OUTPUT"
+            found="true"
           else
-            echo "found=false" >> "$GITHUB_OUTPUT"
+            found="false"
           fi
+          echo "found=$found" >> "$GITHUB_OUTPUT"
+          echo "CURRENT_SHA=$CURRENT_SHA"
+          echo "CHECKSUMS=$CHECKSUMS"
+          echo "found=$found"
 
       - name: Determine filename and stage new guide + checksum + README update
         if: steps.check.outputs.found == 'false' || inputs.force
@@ -79,6 +92,15 @@ jobs:
           echo "latest_year=$latest_year" >> "$GITHUB_OUTPUT"
           echo "dest=$dest" >> "$GITHUB_OUTPUT"
 
+          echo "DIR=$DIR"
+          echo "CHECKSUMS=$CHECKSUMS"
+          echo "README=$README"
+          echo "date_str=$date_str"
+          echo "dest=$dest"
+          echo "sha=$sha"
+          echo "pdf_count=$pdf_count"
+          echo "latest_year=$latest_year"
+
       - name: Update root README counts and year range
         if: steps.check.outputs.found == 'false' || inputs.force
         id: readme
@@ -95,21 +117,39 @@ jobs:
           # Update the year range "from **YYYY–YYYY**" in the Collections table
           sed -i -E "s/editions from \*\*[0-9]{4}–[0-9]{4}\*\*/editions from **2019–${LATEST_YEAR}**/" "$README"
 
-          echo "updated=true" >> "$GITHUB_OUTPUT"
+          updated="true"
+          echo "updated=$updated" >> "$GITHUB_OUTPUT"
+          echo "README=$README"
+          echo "PDF_COUNT=$PDF_COUNT"
+          echo "LATEST_YEAR=$LATEST_YEAR"
+          echo "updated=$updated"
 
       - name: Commit and push changes
         if: steps.check.outputs.found == 'false' || inputs.force
         env:
           DEST: ${{ steps.stage.outputs.dest }}
         run: |
+          CHECKSUMS="Apple_Platform_Security_Guide/CHECKSUMS.txt"
+          README="README.md"
+          COMMIT_MSG="docs(apple-platform-security): add ${DEST}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add "$DEST"
-          git add "Apple_Platform_Security_Guide/CHECKSUMS.txt"
-          git add "README.md"
+          git add "$CHECKSUMS"
+          git add "$README"
           if git diff --cached --quiet; then
+            echo "DEST=$DEST"
+            echo "CHECKSUMS=$CHECKSUMS"
+            echo "README=$README"
+            echo "COMMIT_MSG=$COMMIT_MSG"
+            echo "has_changes=false"
             echo "No changes to commit."
             exit 0
           fi
-          git commit -m "docs(apple-platform-security): add ${DEST}"
+          git commit -m "$COMMIT_MSG"
           git push origin HEAD:master
+          echo "DEST=$DEST"
+          echo "CHECKSUMS=$CHECKSUMS"
+          echo "README=$README"
+          echo "COMMIT_MSG=$COMMIT_MSG"
+          echo "has_changes=true"
