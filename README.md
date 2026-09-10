@@ -13,7 +13,7 @@ This repository exists to make important Apple security materials easier to **br
 
 ## 📦 At a glance
 
-- **55 PDF documents** currently tracked
+- **56 PDF documents** currently tracked
 - **9 primary topic collections**
 - Mostly archival material in **PDF** format
 - Includes both **official Apple documents** and **related technical analysis / assessment papers**
