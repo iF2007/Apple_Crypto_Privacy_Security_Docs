@@ -6,7 +6,7 @@ A curated public archive of Apple security, privacy, and cryptography reference 
 
 ## 📦 At a Glance
 
-- **77 PDF documents** tracked across **17 primary topic collections**
+- **77 PDF documents** currently tracked across **17 primary topic collections**
 - **Strictly English editions** preserved for research, compliance, and systems engineering
 - **Fully traced origins**: Every document is mapped to its originating Apple web page and upstream CDN/PDF URL
 
@@ -16,7 +16,7 @@ A curated public archive of Apple security, privacy, and cryptography reference 
 
 | Collection | PDFs | Scope & Coverage | Upstream Apple Source Portal | Primary Direct Download URL(s) |
 | :--- | :---: | :--- | :--- | :--- |
-| [`Apple_Platform_Security_Guide`](Apple_Platform_Security_Guide/) | 10 | Complete platform security architecture (2019–2026): Hardware Root of Trust, Secure Boot, Secure Enclave, Data Protection, Kernel integrity. | [Apple Platform Security Support Guide](https://support.apple.com/guide/security/welcome/web) | [apple-platform-security-guide.pdf](https://help.apple.com/pdf/security/en_US/apple-platform-security-guide.pdf) |
+| [`Apple_Platform_Security_Guide`](Apple_Platform_Security_Guide/) | 10 | Platform security architecture editions from **2019–2026**, covering Hardware Root of Trust, Secure Boot, Secure Enclave, Data Protection, and Kernel integrity. | [Apple Platform Security Support Guide](https://support.apple.com/guide/security/welcome/web) | [apple-platform-security-guide.pdf](https://help.apple.com/pdf/security/en_US/apple-platform-security-guide.pdf) |
 | [`Personal_Safety_User_Guide`](Personal_Safety_User_Guide/) | 4 | Safety Check, AirTag anti-stalking algorithms, Bluetooth unwanted tracking detection, emergency account resets (2022–2026). | [Personal Safety User Guide Web](https://support.apple.com/guide/personal-safety/welcome/web) | [personal-safety-user-guide.pdf](https://help.apple.com/pdf/personal-safety/en_US/personal-safety-user-guide.pdf) |
 | [`Private_Cloud_Compute`](Private_Cloud_Compute/) | 2 | Apple Intelligence cloud security architecture: Stateless computation, cryptographic attestation, non-targetability, and independent SOC 3 audit assurance (Ernst & Young). | [Apple Security Blog: PCC](https://security.apple.com/blog/private-cloud-compute/) & [Security Certifications](https://support.apple.com/guide/security-certifications/welcome/web) | [2026-Apple-PCC-SOC-3-Report.pdf](https://help.apple.com/pdf/certifications/en_US/2026-Apple-PCC-SOC-3-Report-05-01-25-to-04-30-26.pdf)<br>[2025-Apple-PCC-SOC-3-Report.pdf](https://help.apple.com/pdf/certifications/en_US/2025-Apple-PCC-SOC-3-Report-11-01-24-to-10-31-25.pdf) |
 | [`iMessage_PQ3`](iMessage_PQ3/) | 2 | Post-Quantum Cryptography for iMessage: Kyber-1024 hybrid key encapsulation, post-compromise security, formal protocol verification (Basin et al., ETH Zurich) and independent analysis (Stebila). | [Apple Security Blog: iMessage PQ3](https://security.apple.com/blog/imessage-pq3/) | [Security_analysis_PQ3_Stebila.pdf](https://security.apple.com/assets/files/Security_analysis_of_the_iMessage_PQ3_protocol_Stebila.pdf)<br>[Formal_Analysis_PQ3_Basin.pdf](https://security.apple.com/assets/files/A_Formal_Analysis_of_the_iMessage_PQ3_Messaging_Protocol_Basin_et_al.pdf) |

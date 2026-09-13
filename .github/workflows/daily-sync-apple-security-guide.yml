@@ -112,10 +112,10 @@ jobs:
           README="README.md"
 
           # Update "**N PDF documents** currently tracked"
-          sed -i -E "s/- \*\*[0-9]+ PDF documents\*\* currently tracked/- **${PDF_COUNT} PDF documents** currently tracked/" "$README"
+          sed -i -E "s/- \*\*[0-9]+ PDF documents\*\*( currently tracked)?/- **${PDF_COUNT} PDF documents** currently tracked/" "$README"
 
           # Update the year range "from **YYYY–YYYY**" in the Collections table
-          sed -i -E "s/editions from \*\*[0-9]{4}–[0-9]{4}\*\*/editions from **2019–${LATEST_YEAR}**/" "$README"
+          sed -i -E "s/editions from \*\*[0-9]{4}[-–][0-9]{4}\*\*/editions from **2019–${LATEST_YEAR}**/" "$README"
 
           updated="true"
           echo "updated=$updated" >> "$GITHUB_OUTPUT"
